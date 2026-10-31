@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SayHola</string>
+    <string name="title_activity_main">SayHola</string>
+    <string name="package_name">com.sayhola.chat</string>
+    <string name="custom_url_scheme">com.sayhola.chat</string>
+</resources>

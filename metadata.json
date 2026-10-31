@@ -1,0 +1,6 @@
+{
+  "name": "SayHola — Free Public Chat Room",
+  "description": "Free public real-time chat room. Pick a nickname and start chatting online instantly with no registration, no passwords, and zero fees.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

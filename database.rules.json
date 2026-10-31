@@ -1,0 +1,62 @@
+{
+  "rules": {
+    "admins": {
+      ".read": "auth != null && (auth.token.admin == true || root.child('admins').child(auth.uid).val() == true)",
+      ".write": false
+    },
+    "messages": {
+      ".read": true,
+      ".indexOn": ["created_at"],
+      "$messageId": {
+        ".write": "(auth != null && (auth.token.admin == true || root.child('admins').child(auth.uid).val() == true)) || (!data.exists() && newData.exists() && newData.hasChildren(['session_id', 'nickname_snapshot', 'message_text', 'created_at']) && newData.child('session_id').isString() && newData.child('session_id').val().length > 0 && newData.child('session_id').val().length <= 64 && newData.child('nickname_snapshot').isString() && newData.child('nickname_snapshot').val().length >= 3 && newData.child('nickname_snapshot').val().length <= 30 && newData.child('message_text').isString() && newData.child('message_text').val().length > 0 && newData.child('message_text').val().length <= 500 && newData.child('created_at').isString() && newData.child('created_at').val().length <= 40 && (!newData.hasChild('is_admin') || newData.child('is_admin').val() == false) && root.child('moderation').child(newData.child('session_id').val()).child('isBanned').val() != true && root.child('moderation').child(newData.child('session_id').val()).child('isMuted').val() != true)",
+        ".validate": "newData.hasChildren(['session_id', 'nickname_snapshot', 'message_text', 'created_at'])",
+        "reactions": {
+          ".read": true,
+          "$emojiKey": {
+            "$sessionId": {
+              ".write": "(auth != null && (auth.token.admin == true || root.child('admins').child(auth.uid).val() == true)) || (root.child('moderation').child($sessionId).child('isBanned').val() != true && root.child('moderation').child($sessionId).child('isMuted').val() != true && (!newData.exists() || (newData.isString() && newData.val().length >= 1 && newData.val().length <= 30)))"
+            }
+          }
+        }
+      }
+    },
+    "presence": {
+      ".read": true,
+      "$sessionId": {
+        ".write": "(auth != null && (auth.token.admin == true || root.child('admins').child(auth.uid).val() == true)) || (auth != null && auth.uid == $sessionId && (!newData.exists() || (newData.exists() && newData.hasChildren(['nickname', 'last_seen', 'session_id']) && newData.child('session_id').val() == $sessionId && newData.child('nickname').isString() && newData.child('nickname').val().length >= 3 && newData.child('nickname').val().length <= 30 && (!data.exists() || data.child('session_id').val() == $sessionId) && root.child('moderation').child($sessionId).child('isBanned').val() != true))) || (auth == null && (!newData.exists() || (newData.exists() && newData.hasChildren(['nickname', 'last_seen', 'session_id']) && newData.child('session_id').val() == $sessionId && newData.child('nickname').isString() && newData.child('nickname').val().length >= 3 && newData.child('nickname').val().length <= 30 && (!data.exists() || data.child('session_id').val() == $sessionId) && root.child('moderation').child($sessionId).child('isBanned').val() != true)))",
+        ".validate": "newData.hasChildren(['nickname', 'last_seen', 'session_id']) && newData.child('session_id').val() == $sessionId"
+      }
+    },
+    "typing": {
+      ".read": true,
+      "$sessionId": {
+        ".write": "(auth != null && (auth.token.admin == true || root.child('admins').child(auth.uid).val() == true)) || (!newData.exists()) || (newData.exists() && newData.hasChildren(['nickname', 'timestamp', 'session_id']) && newData.child('session_id').val() == $sessionId && newData.child('nickname').isString() && newData.child('nickname').val().length >= 3 && newData.child('nickname').val().length <= 30 && root.child('moderation').child($sessionId).child('isBanned').val() != true && root.child('moderation').child($sessionId).child('isMuted').val() != true)",
+        ".validate": "newData.hasChildren(['nickname', 'timestamp', 'session_id']) && newData.child('session_id').val() == $sessionId"
+      }
+    },
+    "moderation": {
+      ".read": "auth != null && (auth.token.admin == true || root.child('admins').child(auth.uid).val() == true)",
+      "$sessionId": {
+        ".read": "auth != null && (auth.token.admin == true || root.child('admins').child(auth.uid).val() == true)",
+        ".write": "auth != null && (auth.token.admin == true || root.child('admins').child(auth.uid).val() == true)"
+      }
+    },
+    "reports": {
+      ".read": "auth != null && (auth.token.admin == true || root.child('admins').child(auth.uid).val() == true)",
+      "$reportId": {
+        ".write": "(auth != null && (auth.token.admin == true || root.child('admins').child(auth.uid).val() == true)) || (!data.exists() && newData.exists() && newData.hasChildren(['message_id', 'reporter_session_id', 'reason', 'created_at']) && newData.child('message_id').isString() && newData.child('message_id').val().length > 0 && newData.child('message_id').val().length <= 64 && newData.child('reporter_session_id').isString() && newData.child('reporter_session_id').val().length > 0 && newData.child('reporter_session_id').val().length <= 64 && newData.child('reason').isString() && (newData.child('reason').val() == 'abusive_language' || newData.child('reason').val() == 'harassment' || newData.child('reason').val() == 'spam' || newData.child('reason').val() == 'threats' || newData.child('reason').val() == 'inappropriate_content' || newData.child('reason').val() == 'other') && newData.child('created_at').isString() && (!newData.hasChild('details') || (newData.child('details').isString() && newData.child('details').val().length <= 500)) && root.child('moderation').child(newData.child('reporter_session_id').val()).child('isBanned').val() != true)",
+        ".validate": "newData.hasChildren(['message_id', 'reporter_session_id', 'reason', 'created_at'])"
+      }
+    },
+    "logs": {
+      ".read": "auth != null && (auth.token.admin == true || root.child('admins').child(auth.uid).val() == true)",
+      "$logId": {
+        ".write": "auth != null && (auth.token.admin == true || root.child('admins').child(auth.uid).val() == true)"
+      }
+    },
+    "settings": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.admin == true || root.child('admins').child(auth.uid).val() == true)"
+    }
+  }
+}

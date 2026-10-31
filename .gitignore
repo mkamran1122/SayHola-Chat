@@ -1,0 +1,18 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+serviceAccountKey.json
+*service-account*.json
+
+# Android keystores and signing credentials
+*.jks
+*.keystore
+keystore.properties
+android/keystore.properties
+android/*.jks
+android/app/*.jks
